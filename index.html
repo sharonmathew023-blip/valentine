@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>Will You Be My Valentine? ❤️</title>
+
+  <meta
+    name="description"
+    content="One very important question."
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --pink: #ff3b7a;
+      --pink-dark: #ff155f;
+      --text: #24151c;
+      --muted: #765d67;
+      --white: rgba(255, 255, 255, 0.82);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Segoe UI",
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 20% 15%,
+          rgba(255, 255, 255, 0.95),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 80%,
+          rgba(255, 105, 160, 0.28),
+          transparent 35%
+        ),
+        linear-gradient(
+          135deg,
+          #ffeef6,
+          #ffd6e7 50%,
+          #ffc4dd
+        );
+
+      overflow: hidden;
+    }
+
+    /* FLOATING HEARTS */
+
+    .background-hearts {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      opacity: 0.15;
+      animation: float 8s linear infinite;
+      user-select: none;
+    }
+
+    .heart:nth-child(1) {
+      left: 8%;
+      bottom: -40px;
+      font-size: 24px;
+      animation-delay: 0s;
+    }
+
+    .heart:nth-child(2) {
+      left: 25%;
+      bottom: -50px;
+      font-size: 18px;
+      animation-delay: 2s;
+    }
+
+    .heart:nth-child(3) {
+      left: 55%;
+      bottom: -40px;
+      font-size: 30px;
+      animation-delay: 4s;
+    }
+
+    .heart:nth-child(4) {
+      left: 78%;
+      bottom: -60px;
+      font-size: 20px;
+      animation-delay: 1s;
+    }
+
+    .heart:nth-child(5) {
+      left: 92%;
+      bottom: -50px;
+      font-size: 28px;
+      animation-delay: 5s;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      to {
+        transform: translateY(-115vh) rotate(30deg);
+      }
+    }
+
+    /* CONFETTI */
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* MAIN CARD */
+
+    .card {
+      position: relative;
+      z-index: 2;
+
+      width: min(680px, 94vw);
+      padding: 30px 22px 26px;
+
+      text-align: center;
+
+      background: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 28px;
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      box-shadow:
+        0 25px 80px rgba(143, 44, 86, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+      animation: cardIn 0.7s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ART */
+
+    .art {
+      width: min(230px, 65vw);
+      margin: 0 auto 4px;
+      display: block;
+
+      filter:
+        drop-shadow(0 12px 16px rgba(0, 0, 0, 0.12));
+
+      animation: floatArt 3s ease-in-out infinite;
+    }
+
+    @keyframes floatArt {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-1deg);
+      }
+
+      50% {
+        transform: translateY(-7px) rotate(1deg);
+      }
+    }
+
+    /* TEXT */
+
+    .eyebrow {
+      margin: 0 0 7px;
+
+      color: var(--pink);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 560px;
+
+      font-size: clamp(27px, 6vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle {
+      margin: 12px auto 0;
+      max-width: 450px;
+
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* BUTTON AREA */
+
+    .button-zone {
+      position: relative;
+
+      width: min(520px, 100%);
+      height: 170px;
+
+      margin: 18px auto 0;
+
+      touch-action: none;
+    }
+
+    button {
+      position: absolute;
+
+      top: 50%;
+
+      padding: 15px 25px;
+
+      border: 0;
+      border-radius: 999px;
+
+      font: inherit;
+      font-size: 16px;
+      font-weight: 800;
+
+      cursor: pointer;
+      user-select: none;
+
+      -webkit-tap-highlight-color: transparent;
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.13);
+
+      transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.18s cubic-bezier(.2,.8,.2,1);
+    }
+
+    #yesBtn {
+      left: 18%;
+
+      background: linear-gradient(
+        135deg,
+        var(--pink),
+        var(--pink-dark)
+      );
+
+      color: white;
+
+      transform:
+        translateY(-50%)
+        scale(1);
+    }
+
+    #yesBtn:hover {
+      box-shadow:
+        0 14px 32px rgba(255, 59, 122, 0.35);
+    }
+
+    #noBtn {
+      left: 62%;
+
+      background: #eeeef2;
+      color: #333;
+
+      transform: translateY(-50%);
+    }
+
+    #noBtn:hover {
+      background: #e5e5ea;
+    }
+
+    /* HINT */
+
+    .hint {
+      margin: 2px 0 0;
+
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* RESULT */
+
+    .result {
+      display: none;
+      margin-top: 12px;
+
+      animation: resultIn 0.6s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes resultIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      70% {
+        transform: scale(1.05);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .result h2 {
+      margin: 4px 0 4px;
+
+      color: var(--pink);
+
+      font-size: clamp(38px, 9vw, 64px);
+      line-height: 1;
+
+      letter-spacing: -0.04em;
+    }
+
+    .result p {
+      margin: 12px 0 18px;
+
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .fireworks {
+      display: block;
+
+      width: min(350px, 88vw);
+      max-height: 220px;
+
+      margin: 0 auto;
+
+      border-radius: 18px;
+
+      object-fit: cover;
+
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .love {
+      margin-top: 18px;
+
+      color: var(--pink);
+      font-size: 24px;
+
+      animation: heartbeat 1.2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      15% {
+        transform: scale(1.12);
+      }
+
+      30% {
+        transform: scale(1);
+      }
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 24px 16px 22px;
+        border-radius: 24px;
+      }
+
+      .art {
+        width: min(190px, 58vw);
+      }
+
+      .button-zone {
+        height: 190px;
+      }
+
+      button {
+        padding: 14px 21px;
+        font-size: 15px;
+      }
+
+      .subtitle {
+        font-size: 0.88rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background-hearts" aria-hidden="true">
+    <span class="heart">♥</span>
+    <span class="heart">♡</span>
+    <span class="heart">♥</span>
+    <span class="heart">♡</span>
+    <span class="heart">♥</span>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <main class="card">
+
+    <svg
+      class="art"
+      viewBox="0 0 320 240"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="fur" x1="0" x2="1">
+          <stop offset="0" stop-color="#f7c7a1"/>
+          <stop offset="1" stop-color="#f2a97b"/>
+        </linearGradient>
+
+        <linearGradient id="heart" x1="0" x2="1">
+          <stop offset="0" stop-color="#ff4d7d"/>
+          <stop offset="1" stop-color="#ff1f68"/>
+        </linearGradient>
+      </defs>
+
+      <path
+        d="M250 50 C250 33 270 25 282 38
+           C294 25 314 33 314 50
+           C314 78 282 92 282 106
+           C282 92 250 78 250 50Z"
+        fill="url(#heart)"
+      />
+
+      <path
+        d="M90 120 C90 70 140 40 190 60
+           C240 40 290 70 290 120
+           C290 180 240 210 190 210
+           C140 210 90 180 90 120Z"
+        fill="url(#fur)"
+      />
+
+      <path
+        d="M110 92 L95 55 L140 78 Z"
+        fill="#f2a97b"
+      />
+
+      <path
+        d="M270 92 L285 55 L240 78 Z"
+        fill="#f2a97b"
+      />
+
+      <circle cx="160" cy="130" r="8"/>
+      <circle cx="220" cy="130" r="8"/>
+
+      <path
+        d="M190 144 C186 144 182 148 182 152
+           C182 160 190 164 190 170
+           C190 164 198 160 198 152
+           C198 148 194 144 190 144Z"
+        fill="#ff7aa2"
+      />
+    </svg>
+
+    <p class="eyebrow">
+      One very important question
+    </p>
+
+    <h1>
+      Will you be my Valentine?
+    </h1>
+
+    <p class="subtitle">
+      Think carefully. The website has already made its decision.
+    </p>
+
+    <section
+      class="button-zone"
+      id="zone"
+      aria-label="Valentine answer"
+    >
+      <button id="yesBtn" type="button">
+        Yes ❤️
+      </button>
+
+      <button id="noBtn" type="button">
+        No
+      </button>
+    </section>
+
+    <div class="hint" id="hint">
+      “No” seems a little shy 😈
+    </div>
+
+    <section
+      class="result"
+      id="result"
+      aria-live="polite"
+    >
+      <h2>YAY! 🎉</h2>
+
+      <p>
+        I knew you'd make the correct decision. 🌝❤️
+      </p>
+
+      <img
+        class="fireworks"
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        alt="Celebrating fireworks"
+      />
+
+      <div class="love">
+        ❤️ ❤️ ❤️
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const zone = document.getElementById("zone");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const result = document.getElementById("result");
+    const hint = document.getElementById("hint");
+
+    const confettiCanvas =
+      document.getElementById("confettiCanvas");
+
+    function resizeConfettiCanvas() {
+      const dpr =
+        Math.max(1, window.devicePixelRatio || 1);
+
+      confettiCanvas.width =
+        Math.floor(window.innerWidth * dpr);
+
+      confettiCanvas.height =
+        Math.floor(window.innerHeight * dpr);
+
+      confettiCanvas.style.width = "100vw";
+      confettiCanvas.style.height = "100vh";
+    }
+
+    resizeConfettiCanvas();
+
+    window.addEventListener(
+      "resize",
+      resizeConfettiCanvas
+    );
+
+    window.addEventListener(
+      "orientationchange",
+      () => {
+        setTimeout(
+          resizeConfettiCanvas,
+          150
+        );
+      }
+    );
+
+    const confettiInstance =
+      confetti.create(
+        confettiCanvas,
+        {
+          resize: false,
+          useWorker: true
+        }
+      );
+
+    function celebrate() {
+      const end =
+        Date.now() + 1800;
+
+      function frame() {
+        confettiInstance({
+          particleCount: 14,
+          spread: 100,
+          startVelocity: 45,
+          ticks: 180,
+
+          origin: {
+            x: Math.random(),
+            y: Math.random() * 0.35
+          }
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }
+
+      frame();
+
+      setTimeout(() => {
+        confettiInstance({
+          particleCount: 350,
+          spread: 150,
+          startVelocity: 55,
+          ticks: 230,
+
+          origin: {
+            x: 0.5,
+            y: 0.55
+          }
+        });
+      }, 250);
+    }
+
+    let yesScale = 1;
+
+    function growYes() {
+      yesScale = Math.min(
+        2.15,
+        yesScale + 0.08
+      );
+
+      yesBtn.style.transform =
+        `translateY(-50%) scale(${yesScale})`;
+    }
+
+    function clamp(
+      value,
+      min,
+      max
+    ) {
+      return Math.max(
+        min,
+        Math.min(max, value)
+      );
+    }
+
+    function moveNo(
+      pointerX,
+      pointerY
+    ) {
+      const zoneRect =
+        zone.getBoundingClientRect();
+
+      const buttonRect =
+        noBtn.getBoundingClientRect();
+
+      let dx =
+        (buttonRect.left +
+          buttonRect.width / 2) -
+        pointerX;
+
+      let dy =
+        (buttonRect.top +
+          buttonRect.height / 2) -
+        pointerY;
+
+      const distance =
+        Math.hypot(dx, dy) || 1;
+
+      dx /= distance;
+      dy /= distance;
+
+      const jump =
+        Math.min(
+          180,
+          Math.max(
+            110,
+            zoneRect.width * 0.28
+          )
+        );
+
+      let newLeft =
+        buttonRect.left -
+        zoneRect.left +
+        dx * jump;
+
+      let newTop =
+        buttonRect.top -
+        zoneRect.top +
+        dy * jump;
+
+      newLeft = clamp(
+        newLeft,
+        0,
+        zoneRect.width -
+          buttonRect.width
+      );
+
+      newTop = clamp(
+        newTop,
+        0,
+        zoneRect.height -
+          buttonRect.height
+      );
+
+      noBtn.style.left =
+        `${newLeft}px`;
+
+      noBtn.style.top =
+        `${newTop}px`;
+
+      noBtn.style.transform =
+        "none";
+
+      growYes();
+    }
+
+    zone.addEventListener(
+      "pointermove",
+      event => {
+        const buttonRect =
+          noBtn.getBoundingClientRect();
+
+        const distance =
+          Math.hypot(
+            buttonRect.left +
+              buttonRect.width / 2 -
+              event.clientX,
+
+            buttonRect.top +
+              buttonRect.height / 2 -
+              event.clientY
+          );
+
+        if (distance < 145) {
+          moveNo(
+            event.clientX,
+            event.clientY
+          );
+        }
+      }
+    );
+
+    zone.addEventListener(
+      "pointerdown",
+      event => {
+        if (event.target === noBtn) {
+          event.preventDefault();
+
+          moveNo(
+            event.clientX,
+            event.clientY
+          );
+        }
+      }
+    );
+
+    noBtn.addEventListener(
+      "click",
+      event => {
+        event.preventDefault();
+
+        moveNo(
+          event.clientX,
+          event.clientY
+        );
+      }
+    );
+
+    yesBtn.addEventListener(
+      "click",
+      () => {
+        zone.style.display = "none";
+        hint.style.display = "none";
+
+        result.style.display = "block";
+
+        resizeConfettiCanvas();
+        celebrate();
+
+        document.title =
+          "YAY! ❤️";
+      }
+    );
+  </script>
+
+</body>
+</html>
